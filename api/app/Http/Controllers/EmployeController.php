@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Employe;
 use App\Http\Requests\EmployeRequest;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class EmployeController extends Controller
 {
@@ -13,8 +16,16 @@ class EmployeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(EmployeRequest $request)
+    public function index(Request $request)
     {
+        $sortValues = ['id', 'firstName', 'lastName', 'email'];
+        $validator = Validator::make($request->all(), [
+            'paginate' => 'integer|min:1',
+            'sort' => ['min:1|max:100', Rule::in($sortValues)]
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
         $paginate = $request->input('paginate', 10);
         $sort = $request->input('sort', 'id');
         $sortDiretion = $request->input('sortDir') == 'desc' ? 'desc' : 'asc';
@@ -60,7 +71,6 @@ class EmployeController extends Controller
         $employe->email = $request->email;
         $employe->job_id = $request->job_id;
         $employe->departement_id = $request->departement_id;
-
 
         $employe->save();
 

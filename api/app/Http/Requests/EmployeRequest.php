@@ -28,8 +28,7 @@ class EmployeRequest extends FormRequest
             'lastName' => 'required|min:1|max:191',
             'email' => 'email:rfc,dns',
             'job_id' => 'required|integer|min:0',
-            'departement_id' => 'required|integer|min:0',
-            'paginate' => 'integer|min:1'
+            'departement_id' => 'required|integer|min:0'
         ];
     }
 }
